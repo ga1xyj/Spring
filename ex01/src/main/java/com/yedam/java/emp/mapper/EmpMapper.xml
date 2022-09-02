@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.java.emp.mapper.EmpMapper">
+	<select id="getEmpList" resultType="EmpVO">
+		SELECT * FROM employees
+		<where>
+			<if test="departmentId != null">
+				department_id = #{departmentId} AND
+			</if>
+			<if test="managerId != null">
+				manager_id = #{managerId} AND
+			</if>
+			job_id = #{jobId}
+		</where>
+	</select>
+	<select id="getEmp" parameterType="EmpVO" resultType="EmpVO">
+		SELECT employee_id,
+					 first_name,
+					 last_name,
+					 <if test="!employeeId.equals('100')">
+					 email,
+					 </if>
+					 hire_date,
+					 job_id,
+					 salary
+		FROM employees
+		WHERE employee_id = #{employeeId}
+	</select>
+	<insert id="insertEmp" parameterType="EmpVO">
+		<!-- insert, update -->
+		<selectKey keyProperty="employeeId" order="BEFORE" resultType="String">
+			SELECT MAX(employee_id)+1 FROM employees
+		</selectKey>
+		INSERT INTO employees (employee_id, first_name, last_name, email, hire_date, job_id, salary)
+		values (#{employeeId}, #{firstName}, #{lastName}, #{email}, sysdate, #{jobId}, #{salary})
+	</insert>
+	<update id="updateSalary" parameterType="Integer">
+		UPDATE employees
+		SET salary = salary * 1.1
+		WHERE employee_id = #{emplId}
+	</update>
+	<update id="updateEmp" parameterType="EmpVO">
+		UPDATE employees
+		<!--SET first_name = #{firstName},
+		last_name = #{lastName},
+		email = #{email}
+		WHERE employee_id = #{employeeId}-->
+		<set>
+			<if test="firstName != null">
+				first_name = #{firstName},
+			</if>
+			<if test="lastName != null">
+				last_name = #{lastName},
+			</if>
+			<if test="email != null">
+				email = #{email}
+			</if>
+		</set>
+		WHERE employee_id = #{employeeId}
+	</update>
+</mapper>
