@@ -3,6 +3,7 @@
 <mapper namespace="com.yedam.java.emp.mapper.EmpMapper">
 	<select id="getEmpList" resultType="EmpVO">
 		SELECT * FROM employees
+		<!--
 		<where>
 			<if test="departmentId != null">
 				department_id = #{departmentId} AND
@@ -12,17 +13,18 @@
 			</if>
 			job_id = #{jobId}
 		</where>
+		-->
 	</select>
 	<select id="getEmp" parameterType="EmpVO" resultType="EmpVO">
-		SELECT employee_id,
-					 first_name,
-					 last_name,
+		SELECT *
+					<!--
 					 <if test="!employeeId.equals('100')">
 					 email,
 					 </if>
 					 hire_date,
 					 job_id,
 					 salary
+		  -->
 		FROM employees
 		WHERE employee_id = #{employeeId}
 	</select>
@@ -58,4 +60,9 @@
 		</set>
 		WHERE employee_id = #{employeeId}
 	</update>
+	
+	<delete id="deleteEmpInfo" parameterType="Integer">
+		DELETE FROM employees
+		WHERE employee_id = #{employeeId}
+	</delete>
 </mapper>
